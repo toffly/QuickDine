@@ -1,3 +1,4 @@
+import AuthModal from "../components/AuthModal"
 import Footer from "../components/Footer"
 import CuisineBrowse from "../components/home/CuisineBrowse"
 import Hero from "../components/home/Hero"
@@ -10,6 +11,7 @@ const Home = () => {
   return (
     <div className="min-h-screen bg-surface flex flex-col pt-0">
         <Navbar/>
+        <AuthModal/>
         <main className="flex-1">
             <Hero/>
             <CuisineBrowse/>

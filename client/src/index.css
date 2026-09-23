@@ -79,3 +79,7 @@ body {
 .slide-in-top {
   @apply animate-fade-in-down animate-duration-400 animate-fill-mode-both
 }
+
+.ambient-shadow {
+  @apply shadow-[2px_4px_8px_0px_rgba(0,_0,_0,_0.8)]
+}
