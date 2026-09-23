@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useAppContext } from "../context/AppContext";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { LayoutDashboard, LogOut, ShieldCheck } from "lucide-react";
+import { LayoutDashboard, LogOut, Menu, ShieldCheck, X } from "lucide-react";
 
 const Navbar = () => {
   const { user, logout, setIsAuthModalOpen } = useAppContext();
@@ -82,7 +82,7 @@ const Navbar = () => {
 
               {/* Dropdown Menu */}
               {dropdownOpen && (
-                <div className="absolute right-0 mt-2 w-56 bg-white border border-outline-variant/30 ambient-shadow rounded-lg py-2 z-50 animate-in fade-in slide-in-from-top-2 duration-200">
+                <div className="absolute right-0 mt-2 w-56 bg-white border border-outline-variant/30 ambient-shadow rounded-lg py-2 z-50 slide-in-top">
                   <div className="px-4 py-2 border-b border-outline-variant/10">
                     <p className="text-sm text-primary truncate">{user.name}</p>
                     <p className="text-xs text-black/55 truncate">
@@ -145,7 +145,90 @@ const Navbar = () => {
         </div>
 
         {/* Mobile Menu Button */}
+        <div className="flex items-center md:hidden">
+          <button
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            className={`p-2 transition-colors cursor-pointer ${scrolled || location.pathname !== "/" ? "text-primary" : "text-white"}`}
+            aria-label="Toggle Menu"
+          >
+            {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+          </button>
+        </div>
       </div>
+
+      {/* Mobile Menu Drawer */}
+      {mobileMenuOpen && (
+        <div className="md:hidden fixed inset-x-0 top-16 bg-white border-b border-outline-variant/20 py-6 px-6 z-50 ambient-shadow flex flex-col gap-5 slide-in-top">
+          <Link
+            to={"/"}
+            className="text-base text-on-surface hover:text-primary"
+          >
+            Discover
+          </Link>
+          <Link
+            to={"/search"}
+            className="text-base text-on-surface hover:text-primary"
+          >
+            Restaurant
+          </Link>
+          <button
+            onClick={handleDashboardClick}
+            className="text-base text-on-surface hover:text-primary text-left cursor-pointer"
+          >
+            Reservations
+          </button>
+
+          <div className="border-t border-outline-variant/50 my-2" />
+
+          {user ? (
+            <div className="flex flex-col gap-4">
+              <div className="flex items-center gap-3">
+                <span className="w-10 h-10 rounded-full bg-secondary/20 flex items-center justify-center text-secondary text-sm uppercase">
+                  {user.name.charAt(0)}
+                </span>
+                <div>
+                  <p className="text-sm text-primary">{user.name}</p>
+                  <p className="text-xs text-black/55">{user.email}</p>
+                </div>
+              </div>
+              {user.role === "admin" && (
+                <Link
+                  to={"/dashboard"}
+                  className="text-sm font-medium text-black/55 hover:text-primary"
+                >
+                  Admin Console
+                </Link>
+              )}
+              {user.role === "owner" && (
+                <Link
+                  to={"/owner/dashboard"}
+                  className="text-sm font-medium text-black/55 hover:text-primary"
+                >
+                  Owner Console
+                </Link>
+              )}
+              <button
+                onClick={logout}
+                className="text-sm font-medium text-error text-left cursor-pointer"
+              >
+                Sign Out
+              </button>
+            </div>
+          ) : (
+            <div className="flex flex-col gap-3">
+              <button
+                onClick={() => setIsAuthModalOpen(true)}
+                className="w-full border border-outline-variant/50 text-center py-3 text-sm font-medium hover:border-primary cursor-pointer"
+              >
+                Sign In
+              </button>
+              <button onClick={()=> setIsAuthModalOpen(true)} className="w-full bg-primary text-white text-center py-3 text-xs font-medium tracking-widest uppercase hover:bg-secondary cursor-pointer">
+                Sign Up
+              </button>
+            </div>
+          )}
+        </div>
+      )}
     </nav>
   );
 };
