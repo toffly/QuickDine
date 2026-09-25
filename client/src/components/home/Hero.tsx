@@ -1,6 +1,6 @@
 import type React from "react";
 import { assets } from "../../assets/assets";
-import { Calendar, MapPin, Search } from "lucide-react";
+import { Calendar, MapPin, Search, Users } from "lucide-react";
 import { useState } from "react";
 
 const Hero = () => {
@@ -74,6 +74,26 @@ const Hero = () => {
               className="w-full bg-transparent border-none focus:outline-none text-sm text-on-surface placeholder:text-black/55 cursor-pointer"
             />
           </div>
+
+          {/* Guests */}
+          <div className="flex-1 flex items-center border-b md:border-b-0 md:border-r border-outline-variant/30 px-4 py-3">
+            <Users
+              className="text-outline-variant mr-3 shrink-0"
+              size={18}
+            />
+            <select value={guests} onChange={(e)=> setGuests(e.target.value)} className="w-full bg-transparent border-none focus:outline-none text-sm text-on-surface cursor-pointer">
+              <option value="1">1 Guest</option>
+              <option value="2">2 Guests</option>
+              <option value="3">3 Guests</option>
+              <option value="4">4 Guests</option>
+              <option value="6">6 Guests</option>
+              <option value="8">8 Guests</option>
+            </select>
+          </div>
+
+          <button type="submit" className="bg-primary text-on-primary text-xs tracking-widest uppercase px-8 py-4 md:py-3 hover:bg-secondary hover:text-white animate-fade-in transition-colors duration-400 cursor-pointer">
+            Find a Table
+          </button>
         </form>
       </div>
     </section>
