@@ -13,6 +13,16 @@ const Navbar = () => {
   const location = useLocation();
 
   useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 30) setScrolled(true);
+      else setScrolled(false);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  useEffect(() => {
     const onLocationChange = () => {
       setMobileMenuOpen(false);
       setDropdownOpen(false);
@@ -222,7 +232,10 @@ const Navbar = () => {
               >
                 Sign In
               </button>
-              <button onClick={()=> setIsAuthModalOpen(true)} className="w-full bg-primary text-white text-center py-3 text-xs font-medium tracking-widest uppercase hover:bg-secondary cursor-pointer">
+              <button
+                onClick={() => setIsAuthModalOpen(true)}
+                className="w-full bg-primary text-white text-center py-3 text-xs font-medium tracking-widest uppercase hover:bg-secondary cursor-pointer"
+              >
                 Sign Up
               </button>
             </div>
