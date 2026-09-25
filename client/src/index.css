@@ -83,3 +83,7 @@ body {
 .ambient-shadow {
   @apply shadow-[2px_4px_8px_0px_rgba(0,_0,_0,_0.8)]
 }
+
+.card-hover-effect{
+
+}
