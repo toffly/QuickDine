@@ -39,7 +39,7 @@ const RestaurantCard = ({ restaurant }: RestaurantCardProps) => {
         <img
           src={restaurant.image}
           alt={restaurant.name}
-          className="w-full h-full objectcover transition-transform duration-700 group-hover:scale-105"
+          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
           loading="lazy"
         />
         <div className="absolute inset-0 bg-linear-to-t from-black/30 via-transparent to-transparent" />
@@ -52,7 +52,7 @@ const RestaurantCard = ({ restaurant }: RestaurantCardProps) => {
             </span>
           )}
           {restaurant.featured && (
-            <span className="text-[9x] font-medium tracking-widest text-on-primary bg-primary py-1 px-2.5 uppercase">
+            <span className="font-medium tracking-widest text-on-primary bg-primary py-1 px-2.5 uppercase">
               Recommend
             </span>
           )}
@@ -102,7 +102,7 @@ const RestaurantCard = ({ restaurant }: RestaurantCardProps) => {
               </span>
               <div className="flex flex-wrap gap1.5">
                 {restaurant
-                  .availableSlots((slot) => {
+                  .availableSlots.filter((slot) => {
                     const [slotHour, slotMinunte] = slot.split(":").map(Number);
                     const now = new Date();
                     const currentHour = now.getHours();

@@ -3,7 +3,14 @@ import { useSearchParams } from "react-router-dom";
 import { dummyRestaurant } from "../assets/assets";
 import Navbar from "../components/Navbar";
 import AuthModal from "../components/AuthModal";
-import { MapPin, SearchIcon, SlidersHorizontal } from "lucide-react";
+import {
+  Check,
+  MapPin,
+  SearchIcon,
+  SearchXIcon,
+  SlidersHorizontal,
+} from "lucide-react";
+import RestaurantCard from "../components/RestaurantCard";
 
 const Search = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -14,8 +21,8 @@ const Search = () => {
   // Filter state initialized from URL params
   const searchVal = searchParams.get("search") || "";
   const locationVal = searchParams.get("location") || "";
-  const cuisinesSelected = searchParams.get("cuisine");
-  const pricesSelected = searchParams.get("priceRange");
+  const cuisinesSelected = searchParams.getAll("cuisine");
+  const pricesSelected = searchParams.getAll("priceRange");
   const sortVal = searchParams.get("sort") || "";
 
   // Temp text inputs for immediate user typing (submit on enter/click)
@@ -96,7 +103,7 @@ const Search = () => {
   const priceOptions = ["$", "$$", "$$$", "$$$$"];
   const cuisineOptions = [
     "Italian",
-    "Frence",
+    "French",
     "Japanese",
     "Steakhouse",
     "Vegetarian",
@@ -159,6 +166,137 @@ const Search = () => {
           </div>
         </div>
       </div>
+
+      <main className="grow max-w-7xl w-full mx-auto px-6 md:px-10 py-10 flex gap-10">
+        {/* Desktop Sidebar Filters */}
+        <aside className="hidden md:block w-64 shrink-0">
+          <div className="sticky top-44 space-y-8">
+            <div className="flex justify-between items-center pb-4 border-b border-outline-variant/10">
+              <h3 className="font-display text-lg font-medium text-primary">
+                Filters
+              </h3>
+              <button
+                onClick={clearAllFilters}
+                className="text-[10px] font-medium text-secondary hover:text-primary tracking-wider uppercase cursor-pointer"
+              >
+                Clear All
+              </button>
+            </div>
+
+            {/* Cuisine Filter */}
+            <div className="space-y-3">
+              <h4 className="text-xs font-medium text-primary tracking-wider uppercase">
+                Cuisine
+              </h4>
+              <div className="space-y-2">
+                {cuisineOptions.map((c) => {
+                  const active = cuisinesSelected?.includes(c);
+                  return (
+                    <button
+                      key={c}
+                      onClick={() => handleCuisineToggle(c)}
+                      className="w-full flex items-center justify-between text-left text-xs text-black/55 hover:text-primary transition-colors cursor-pointer py-1"
+                    >
+                      <span>{c}</span>
+                      <div
+                        className={`w-4 h-4 border rounded-sm flex items-center justify-center transition-colors ${active ? "border-primary text-white bg-black/55" : "border-outline-variant"}`}
+                      >
+                        {active && <Check size={10} />}
+                      </div>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Price Range Filter */}
+            <div className="space-y-3">
+              <h4 className="text-xs text-primary tracking-wider uppercase">
+                Price Range
+              </h4>
+              <div className="grid grid-cols-4 gap-1.5">
+                {priceOptions.map((p) => {
+                  const active = pricesSelected.includes(p);
+                  return (
+                    <button
+                      key={p}
+                      onClick={() => handlePriceToggle(p)}
+                      className={`py-2 text-center text-xs transition-colors cursor-pointer border rounded-sm ${
+                        active
+                          ? "bg-primary border-primary text-white"
+                          : "border-outline-variant/50 text-on-surface hover:border-primary"
+                      }`}
+                    >
+                      {p}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
+        </aside>
+
+        {/* Result Section */}
+        <div className="flex flex-1 flex-col">
+          <div className="flex justify-between items-center mb-8 pb-4 border-b border-outline-variant/10">
+            <p className="text-sm text-black/55">
+              {restaurants.length}{" "}
+              {restaurants.length === 1 ? "Restaurant" : "Restaurants"}{" "}
+              Avaliable
+            </p>
+
+            <div className="flex items-center gap-2">
+              <span className="text-xs text-black/55 tracking-wider uppercase">
+                Sort By:
+              </span>
+              <select
+                value={sortVal}
+                onChange={(e) => handleSortChange(e.target.value)}
+                className="text-xs bg-transparent border border-outline-variant/30 px-3 py-1.5 focus:outline-none cursor-pointer rounded-sm"
+              >
+                <option value="">Default (Newest)</option>
+                <option value="price_low">Price: Low to High</option>
+                <option value="price_high">Price: High to Low</option>
+              </select>
+            </div>
+          </div>
+
+          {loading ? (
+            <div className="grow flex justify-center items-center py-24">
+              <div className="w-10 h-10 border-2 border-outline-variant/30 border-t-secondary rounded-full animate-spin" />
+            </div>
+          ) : restaurants.length === 0 ? (
+            <div className="grow flex flex-col items-center justify-center py-24 text-center">
+              <SearchXIcon size={36} className="text-outline-variant mb-4" />
+              <h3 className="font-display text-xl font-medium mb-2">
+                No Restaurants Found
+              </h3>
+              <p className="text-xs text-black/50 max-w-sm mb-6">
+                We couldn't find any premium establishments matchinh your search
+                query. Try widening your filters
+              </p>
+              <button
+                onClick={clearAllFilters}
+                className="bg-primary hover:bg-secondary text-white text-xs tracking-widest uppercase px-6 py-3 transition-colors cursor-pointer"
+              >
+                Clear All Filters
+              </button>
+            </div>
+          ) : (
+            <div className="flex flex-col lg:flex-row gap-6 grow">
+              {/* Restaurants List Gird */}
+              <div className="grid gap-6 grid-cols-1 lg:grid-cols-2">
+                {restaurants.map((restaurant) => (
+                  <RestaurantCard
+                    key={restaurant._id}
+                    restaurant={restaurant}
+                  />
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+      </main>
     </div>
   );
 };
