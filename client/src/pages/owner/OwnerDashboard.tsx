@@ -3,6 +3,7 @@ import { useAppContext } from "../../context/AppContext";
 import { dummyMyBookingsData, dummyRestaurant } from "../../assets/assets";
 import Loader from "../../components/Loader";
 import Navbar from "../../components/Navbar";
+import RestaurantWizard from "../../components/owner/RestaurantWizard";
 
 const OwnerDashboard = () => {
   const { logout } = useAppContext();
@@ -49,7 +50,7 @@ const OwnerDashboard = () => {
         </div>
 
         {/* Case 1: No Restaurant Setup Profile */}
-       
+       <RestaurantWizard setRestaurant={setRestaurant}/>
       </main>
     </div>
   );

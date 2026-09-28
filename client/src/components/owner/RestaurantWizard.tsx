@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { dummyRestaurant } from "../../assets/assets";
 import toast from "react-hot-toast";
+import { Utensils } from "lucide-react";
 
 interface RestaurantWizardProps {
   setRestaurant: (restaurant: any) => void;
@@ -86,15 +87,79 @@ const RestaurantWizard = ({ setRestaurant }: RestaurantWizardProps) => {
       setRestaurant(dummyRestaurant[0]);
       toast.success(
         "Restaurant profile submitted successfully! Awaiting Admin approval.",
-      )
+      );
     } catch (error: any) {
-        toast.error(error?.response?.data?.message || "Failed to register restaurant")
+      toast.error(
+        error?.response?.data?.message || "Failed to register restaurant",
+      );
     } finally {
-        setFormLoading(false)
+      setFormLoading(false);
     }
   };
 
-  return <div></div>;
+  return (
+    <div className="max-w-2xl mx-auto bg-white border border-outline-variant/20 p-8 md:p-10 shadow-sm rounded-md space-y-6">
+      <div className="text-center space-y-2 pb-6 border-b border-outline-variant/10">
+        <Utensils size={36} className="mx-auto text-secondary" />
+        <h2 className="font-display text-xl font-medium text-primary">
+          Setup Restaurant Profile
+        </h2>
+        <p className="text-xs text-black/55">
+          Please create your restaurant details. Once submitted, it will be
+          pending approval from the Admin
+        </p>
+      </div>
+
+      <form onSubmit={handleCreateRestaurant} className="space-y-5 text-left">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {/* Name Input */}
+          <div className="space-y-1">
+            <label className="block text-[10px] font-medium text-black/55 tracking-wider uppercase">
+              Restaurant Name
+            </label>
+            <input
+              type="text"
+              required
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              placeholder="e.g. L'Artiste"
+              className="w-full bg-surface-container-low/30 border border-outline-variant/40 px-3 py-2.5 text-xs focus:border-secondary focus:outline-none rounded-sm"
+            />
+          </div>
+
+            {/* Cuisine Type Input */}
+          <div className="space-y-1">
+            <label className="block text-[10px] font-medium text-black/55 tracking-wider uppercase">
+              Cuisine Type
+            </label>
+            <input
+              type="text"
+              required
+              value={cuisine}
+              onChange={(e) => setCuisine(e.target.value)}
+              placeholder="e.g. French, Japanese"
+              className="w-full bg-surface-container-low/30 border border-outline-variant/40 px-3 py-2.5 text-xs focus:border-secondary focus:outline-none rounded-sm"
+            />
+          </div>
+        </div>
+
+        {/* Descriptions Input */}
+          <div className="space-y-1">
+            <label className="block text-[10px] font-medium text-black/55 tracking-wider uppercase">
+              Description
+            </label>
+            <textarea
+              rows={4}
+              required
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              placeholder="Describe the experience, atmosphere and dining philosophy..."
+              className="w-full bg-surface-container-low/30 border border-outline-variant/40 p-3 text-xs focus:border-secondary focus:outline-none rounded-sm overflow-scroll resize-none"
+            />
+          </div>
+      </form>
+    </div>
+  );
 };
 
 export default RestaurantWizard;
