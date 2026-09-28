@@ -31,7 +31,7 @@ const App = () => {
         <Route path="/search" element={<Search />} />
         <Route path="/restaurant/:slug" element={<RestaurantDetail />} />
         <Route
-          path="/booking/:slug"
+          path="/bookings/:slug"
           element={
             <ProtectedRoute>
               <BookingConfirmation />
