@@ -9,8 +9,10 @@ import {
   SearchIcon,
   SearchXIcon,
   SlidersHorizontal,
+  X,
 } from "lucide-react";
 import RestaurantCard from "../components/RestaurantCard";
+import Footer from "../components/Footer";
 
 const Search = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -297,6 +299,100 @@ const Search = () => {
           )}
         </div>
       </main>
+
+      {/* Mobile Filters Drawer Modal */}
+      {showMobileFilters && (
+        <div className="fixed inset-0 z-50 justify-end bg-black/50 backdrop-blur-sm md:hidden animate-fade-in animate-duration-200">
+          <div className="w-80 bg-white h-full p-6 flex flex-col justify-between shadow-2xl animate-slide-in-left animate-duration-300">
+            <div>
+              <div className="flex justify-between items-center pb-4 border-b border-outline-variant/10">
+                <h3 className="font-display text-lg font-medium text-primary">
+                  Filters
+                </h3>
+                <button
+                  onClick={() => setShowMobileFilters(false)}
+                  className="p-1 text-black/55 hover:text-primary transition-colors cursor-pointer"
+                >
+                  <X size={20} />
+                </button>
+              </div>
+
+              {/* Cuisine */}
+              <div className="py-6 space-y-3">
+                <h4 className="text-xs text-primary tracking-wider uppercase">
+                  Cuisine
+                </h4>
+                <div className="space-y-2">
+                  {cuisineOptions.map((c) => {
+                    const active = cuisinesSelected.includes(c);
+                    return (
+                      <button
+                        key={c}
+                        onClick={() => handleCuisineToggle(c)}
+                        className="w-full flex items-center justify-between text-left text-xs text-black/55 hover:text-primary py-1 cursor-pointer"
+                      >
+                        <span>{c}</span>
+                        <div
+                          className={`w-4 h-4 border rounded-sm flex items-center justify-center ${
+                            active
+                              ? "bg-primary border-primary text-white"
+                              : "border-outline-variant"
+                          }`}
+                        >
+                          {active && <Check size={10} />}
+                        </div>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {/* Price */}
+              <div className="py-4 space-y-3 border-t border-outline-variant/10">
+                <h4 className="text-xs font-medium text-primary tracking-wider uppercase">
+                  Price Range
+                </h4>
+                <div className="grid grid-cols-4 gap-1.5">
+                  {priceOptions.map((p) => {
+                    const active = pricesSelected.includes(p);
+                    return (
+                      <button
+                        key={p}
+                        onClick={() => handlePriceToggle(p)}
+                        className={`py-2 text-center text-xs font-medium transition-colors cursor-pointer border rounded-sm ${
+                          active
+                            ? "bg-primary border-primary text-white"
+                            : "border-outline-variant/50 text-on-surface hover:border-primary"
+                        }`}
+                      >
+                        {p}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+            </div>
+
+            {/* Drawer Bottom Actions */}
+            <div className="border-t border-outline-variant/10 pt-4 flex gap-3">
+              <button
+                onClick={clearAllFilters}
+                className="flex-1 border border-outline-variant/50 py-3 text-xs font-medium tracking-widest uppercase cursor-pointer"
+              >
+                Clear
+              </button>
+              <button
+                onClick={() => setShowMobileFilters(false)}
+                className="flex-1 bg-primary text-white py-3 text-xs font-medium tracking-widest uppercase hover:bg-secondary cursor-pointers transition-colors"
+              >
+                Apply
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      <Footer/>
     </div>
   );
 };

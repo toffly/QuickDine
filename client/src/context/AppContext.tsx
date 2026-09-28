@@ -6,7 +6,7 @@ interface UserType {
   name: string;
   email: string;
   phone?: string;
-  role: "uesr" | "admin" | "owner";
+  role: "user" | "admin" | "owner";
 }
 
 interface AppContextType {
@@ -71,13 +71,13 @@ export const AppContextProvider = ({ children }: Props) => {
   };
 
   useEffect(() => {
-    const loadUesr = async () => {
+    const loaduser = async () => {
       if (token) {
         setUser(dummyUser as any);
       }
       setLoading(false);
     };
-    loadUesr();
+    loaduser();
   }, []);
 
   const value: AppContextType = {
