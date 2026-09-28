@@ -94,7 +94,7 @@ const RestaurantWizard = ({ setRestaurant }: RestaurantWizardProps) => {
     }
   };
 
-  return <div>RestaurantWizard</div>;
+  return <div></div>;
 };
 
 export default RestaurantWizard;
