@@ -7,6 +7,8 @@ import toast from "react-hot-toast";
 import Navbar from "../components/Navbar";
 import AuthModal from "../components/AuthModal";
 import RestaurantHero from "../components/restaurant/RestaurantHero";
+import RestaurantInfo from "../components/restaurant/RestaurantInfo";
+import RestaurantReviews from "../components/restaurant/RestaurantReviews";
 
 const RestaurantDetail = () => {
   const { slug } = useParams<{ slug: string }>();
@@ -71,6 +73,17 @@ const RestaurantDetail = () => {
 
       {/* Hero Image Section */}
       <RestaurantHero restaurant={restaurant}/>
+
+      {/* Split Content Section */}
+      <main className="grow max-w-7xl w-full mx-auto px-6 md:px-10 py-12">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
+          {/* Left Column (Details, Menu, Reviews) */}
+          <div className="lg:col-span-8 space-y-12">
+            <RestaurantInfo restaurant={restaurant}/>
+            <RestaurantReviews/>
+          </div>
+        </div>
+      </main>
     </div>
   );
 };
