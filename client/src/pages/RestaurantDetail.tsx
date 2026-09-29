@@ -6,6 +6,7 @@ import Loader from "../components/Loader";
 import toast from "react-hot-toast";
 import Navbar from "../components/Navbar";
 import AuthModal from "../components/AuthModal";
+import RestaurantHero from "../components/restaurant/RestaurantHero";
 
 const RestaurantDetail = () => {
   const { slug } = useParams<{ slug: string }>();
@@ -69,7 +70,7 @@ const RestaurantDetail = () => {
       <AuthModal />
 
       {/* Hero Image Section */}
-      
+      <RestaurantHero restaurant={restaurant}/>
     </div>
   );
 };

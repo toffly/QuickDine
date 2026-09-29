@@ -52,7 +52,7 @@ const RestaurantCard = ({ restaurant }: RestaurantCardProps) => {
             </span>
           )}
           {restaurant.featured && (
-            <span className="font-medium tracking-widest text-on-primary bg-primary py-1 px-2.5 uppercase">
+            <span className="text-[9px] tracking-widest text-on-primary bg-primary py-1 px-2.5 uppercase">
               Recommend
             </span>
           )}
