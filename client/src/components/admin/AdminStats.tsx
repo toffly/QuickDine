@@ -57,10 +57,47 @@ const AdminStats = ({ stats }: AdminStatsProps) => {
                       >
                         {header}
                       </th>
-                    )
+                    ),
                   )}
                 </tr>
               </thead>
+
+              <tbody className="divide-y divide-outline-variant/25">
+                {stats.latestBookings.map((b: any) => (
+                  <tr key={b._id} className="hover:bg-surface/50">
+                    <td className="p-4 text-primary">{b.bookingId}</td>
+                    <td className="p-4">
+                      <div className="text-primary">{b.user?.name}</div>
+                      <div className="text-[10px] text-black/50">
+                        {b.user?.email}
+                      </div>
+                    </td>
+
+                    <td className="p-4 text-pretty">
+                      {b.restaurant?.name || "Deleted Restaurant"}
+                    </td>
+
+                    <td className="p-4 text-black/55">
+                      {new Date(b.date).toLocaleDateString()} at {b.time} PM ·{" "}
+                      {b.guests} Guests
+                    </td>
+
+                    <td className="p-4 text-right">
+                      <span
+                        className={`inline-block py-0.5 px-2 text-[9px] tracking-wider uppercase rounded-sm ${
+                          b.status === "confirmed"
+                            ? "bg-blue-100 text-blue-800"
+                            : b.status === "completed"
+                              ? "bg-green-100 text-green-800"
+                              : "bg-error-container text-on-error-container"
+                        }`}
+                      >
+                        {b.status}
+                      </span>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
             </table>
           </div>
         )}
