@@ -5,6 +5,8 @@ import Loader from "../../components/Loader";
 import Navbar from "../../components/Navbar";
 import { BarChart3Icon, CheckCircleIcon, ShieldCheckIcon } from "lucide-react";
 import AdminApprovals from "../../components/admin/AdminApprovals";
+import AdminStats from "../../components/admin/AdminStats";
+import Footer from "../../components/Footer";
 
 const AdminDashboard = () => {
   const { logout } = useAppContext();
@@ -109,9 +111,13 @@ const AdminDashboard = () => {
                 onApproveStatus={handleApproveStatus}
               />
             )}
+
+            {/* Tab 2: Analytic & Stats */}
+            {activeTab === "stats" && stats && <AdminStats stats={stats}/>}
           </div>
         </div>
       </main>
+      <Footer/>
     </div>
   );
 };
