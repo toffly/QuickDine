@@ -244,7 +244,7 @@ const Search = () => {
             <p className="text-sm text-black/55">
               {restaurants.length}{" "}
               {restaurants.length === 1 ? "Restaurant" : "Restaurants"}{" "}
-              Avaliable
+              Available
             </p>
 
             <div className="flex items-center gap-2">
