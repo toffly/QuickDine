@@ -9,6 +9,7 @@ import AuthModal from "../components/AuthModal";
 import RestaurantHero from "../components/restaurant/RestaurantHero";
 import RestaurantInfo from "../components/restaurant/RestaurantInfo";
 import RestaurantReviews from "../components/restaurant/RestaurantReviews";
+import BookingWidget from "../components/restaurant/BookingWidget";
 
 const RestaurantDetail = () => {
   const { slug } = useParams<{ slug: string }>();
@@ -72,15 +73,32 @@ const RestaurantDetail = () => {
       <AuthModal />
 
       {/* Hero Image Section */}
-      <RestaurantHero restaurant={restaurant}/>
+      <RestaurantHero restaurant={restaurant} />
 
       {/* Split Content Section */}
       <main className="grow max-w-7xl w-full mx-auto px-6 md:px-10 py-12">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
           {/* Left Column (Details, Menu, Reviews) */}
           <div className="lg:col-span-8 space-y-12">
-            <RestaurantInfo restaurant={restaurant}/>
-            <RestaurantReviews/>
+            <RestaurantInfo restaurant={restaurant} />
+            <RestaurantReviews />
+          </div>
+
+          {/* Right Column (Sticky Reservation Widget) */}
+          <div className="lg:col-span-4 lg:sticky lg:top-36">
+            <BookingWidget
+              restaurant={restaurant}
+              selectedDate={selectedDate}
+              setSelectedDate={setSelectedDate}
+              selectedGuests={selectedGuests}
+              setSelectedGuests={setSelectedGuests}
+              selectedSlot={selectedSlot}
+              setSelectedSlot={setSelectedSlot}
+              slotsAvailability={slotAvailable}
+              loadingSlots={loadingSlot}
+              isAuthenticated={isAuthenticated}
+              handleReserveClock={handleReserveClick}
+            />
           </div>
         </div>
       </main>
