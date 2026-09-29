@@ -7,7 +7,7 @@ const Footer = () => {
       <div className="max-w-7xl mx-auto px-6 md:px-10 grid grid-cols-1 md:grid-cols-4 gap-10">
         <div className="md:col-span-1">
           <Link to={"/"} className="text-primary block mb-2">
-            <img src="logo.svg" alt="Logo" className="h-10 mt-1.5" />
+            <img src="/logo.svg" alt="Logo" className="h-10 mt-1.5" />
           </Link>
 
           <p className="text-black/55 text-sm leading-relaxed pr-4">

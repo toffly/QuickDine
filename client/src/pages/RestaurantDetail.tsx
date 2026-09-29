@@ -10,6 +10,7 @@ import RestaurantHero from "../components/restaurant/RestaurantHero";
 import RestaurantInfo from "../components/restaurant/RestaurantInfo";
 import RestaurantReviews from "../components/restaurant/RestaurantReviews";
 import BookingWidget from "../components/restaurant/BookingWidget";
+import Footer from "../components/Footer";
 
 const RestaurantDetail = () => {
   const { slug } = useParams<{ slug: string }>();
@@ -102,6 +103,8 @@ const RestaurantDetail = () => {
           </div>
         </div>
       </main>
+
+      <Footer/>
     </div>
   );
 };

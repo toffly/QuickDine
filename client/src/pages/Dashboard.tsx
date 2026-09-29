@@ -32,7 +32,7 @@ const Dashboard = () => {
     };
 
     if (user) {
-    fetchBookings();
+      fetchBookings();
     }
   }, [user]);
 
@@ -60,7 +60,7 @@ const Dashboard = () => {
     }
   };
 
-  if(!user) return null
+  if (!user) return null;
 
   // Filter Bookings into upcoming and past
   const today = new Date();
@@ -116,7 +116,7 @@ const Dashboard = () => {
                   to={"/search"}
                   className="inline-block mt-4 bg-primary hover:bg-secondary text-white text-[10px] font-medium tracking-widest uppercase px-6 py-2.5 transition-colors"
                 >
-                  Book a Table
+                  Book a
                 </Link>
               </div>
             ) : (
@@ -195,9 +195,7 @@ const Dashboard = () => {
                             <th className="p-4">Restaurant</th>
                             <th className="p-4">Date & Time</th>
                             <th className="p-4">Party</th>
-                            <th className="p-4 w-24 whitespace-nowrap">
-                              Status
-                            </th>
+                            <th className="p-4 text-right">Status</th>
                           </tr>
                         </thead>
                         <tbody className="divide-y divide-outline-variant/10">

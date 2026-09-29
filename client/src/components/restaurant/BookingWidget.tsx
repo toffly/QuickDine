@@ -32,7 +32,7 @@ const BookingWidget = ({
   return (
     <div className="bg-white border border-outline-variant/20 p-6 rounded-md shadow-sm text-left">
       <h3 className="font-display text-lg font-medium text-primary mb-4 pb-3 border-b border-outline-variant/10">
-        Book a Table
+        Book a 
       </h3>
       <div className="space-y-4">
         {/* Guests count */}
@@ -70,6 +70,7 @@ const BookingWidget = ({
               type="date"
               value={selectedDate}
               onChange={(e) => setSelectedDate(e.target.value)}
+              onClick={(e) => e.currentTarget.showPicker()}
               min={new Date().toISOString().split("T")[0]}
               className="w-full bg-surface-container-low/30 pl-9 pr-3 py-2.5 text-xs border border-outline-variant/40 focus:border-secondary focus:outline-none rounded-md cursor-pointer"
             />
