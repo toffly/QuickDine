@@ -33,7 +33,7 @@ const RestaurantCard = ({ restaurant }: RestaurantCardProps) => {
     <div className="group relative bg-white border border-outline-variant/10 card-hover-effect overflow-hidden rounded-md flex flex-col h-full">
       {/* Image & Badge */}
       <Link
-        to={`restaurant/${restaurant.slug}`}
+        to={`/restaurant/${restaurant.slug}`}
         className="relative h-60 overflow-hidden block"
       >
         <img
