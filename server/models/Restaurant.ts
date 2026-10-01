@@ -47,6 +47,7 @@ const RestaurantSchema = new Schema<IRestaurant>(
     location: { type: String, required: true, trim: true },
     address: { type: String, required: true },
     image: { type: String, default: "" },
+    chef: {type: String, required: true},
     tags: { type: [String], default: [] },
     availableSlots: { type: [String], default: [] },
     featured: { type: Boolean, default: false },
