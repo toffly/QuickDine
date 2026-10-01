@@ -4,6 +4,9 @@ import jwt from "jsonwebtoken";
 import { User } from "../models/User.js";
 import { Booking } from "../models/Booking.js";
 
+const escapeRegex = (value: unknown): string =>
+  String(value).replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+
 // Get all restaurants with search filters
 // Get /api/restaurants
 export const getRestaurants = async (
@@ -17,10 +20,11 @@ export const getRestaurants = async (
     const queryObject: any = { status: "approved" };
 
     if (search) {
+      const searchRegex = escapeRegex(search);
       queryObject.$or = [
-        { name: { $regex: search, $options: "i" } },
-        { tags: { $regex: search, $options: "i" } },
-        { location: { $regex: search, $options: "i" } },
+        { name: { $regex: searchRegex, $options: "i" } },
+        { tags: { $regex: searchRegex, $options: "i" } },
+        { location: { $regex: searchRegex, $options: "i" } },
       ];
     }
 
@@ -34,7 +38,10 @@ export const getRestaurants = async (
     }
 
     if (location) {
-      queryObject.location = { $regex: location as string, $options: "i" };
+      queryObject.location = {
+        $regex: escapeRegex(location),
+        $options: "i",
+      };
     }
 
     // Sorting
