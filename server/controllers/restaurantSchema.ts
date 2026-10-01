@@ -1,8 +1,8 @@
 import { Request, Response } from "express";
 import { Restaurant } from "../models/Restaurant.js";
 import jwt from "jsonwebtoken";
-import { userInfo } from "node:os";
 import { User } from "../models/User.js";
+import { Booking } from "../models/Booking.js";
 
 // Get all restaurants with search filters
 // Get /api/restaurants
@@ -43,7 +43,7 @@ export const getRestaurants = async (
       sortOption = { rating: -1 };
     } else if (sort === "price_low") {
       sortOption = { priceRange: 1 };
-    } else if (sort === "price_low") {
+    } else if (sort === "price_high") {
       sortOption = { priceRange: -1 };
     }
 
@@ -113,9 +113,9 @@ export const getRestaurantBySlug = async (
           // Ignore token verify error
         }
       }
-      if(!isAuthorized){
-        res.status(404).json({message: "Restaurant not found or pending"})
-        return
+      if (!isAuthorized) {
+        res.status(404).json({ message: "Restaurant not found or pending" });
+        return;
       }
     }
     res.json(restaurant);
@@ -130,4 +130,46 @@ export const getRestaurantBySlug = async (
 export const getRestaurantAvailability = async (
   req: Request,
   res: Response,
-): Promise<void> => {};
+): Promise<void> => {
+    try {
+    const {date} = req.query
+    if(!date) {
+        res.status(400).json({message: "Please provide a date"})
+        return
+    }
+
+    const restaurant = await Restaurant.findById(req.params.id)
+    if(!restaurant){
+        res.status(404).json({message: "Restaurant not found"})
+        return
+    }
+
+    const bookingDate = new Date(date as string)
+
+    // Get all active bookings on this date for restaurant
+    const bookings = await Booking.find({
+        restaurant: restaurant._id,
+        date:bookingDate,
+        status: "confirmed"
+    })
+
+    // Map slots to available capacities
+    const availability = restaurant.availableSlots.map((slot)=> {
+        const bookedSeats = bookings.filter((b)=> b.time === slot).reduce((sum, b)=> sum+b.guests, 0)
+
+        const totalSeats = restaurant.totalSeats || 20
+        const availableSeats = Math.max(0, totalSeats - bookedSeats)
+
+        return {
+            time: slot,
+            availableSeats,
+            isAvailable: availableSeats > 0
+        }
+    })
+
+    res.json(availability)
+  } catch (error: any) {
+    console.error(error);
+    res.status(400).json({ message: error.message });
+  }
+};
