@@ -55,7 +55,7 @@ export const adminOnly = (
   if (req.user && req.user.role === "admin") {
     next();
   } else {
-    res.status(403).json({ messageL: "Access denied, admin role required" });
+    res.status(403).json({ message: "Access denied, admin role required" });
   }
 };
 
@@ -67,6 +67,6 @@ export const OwnerOnly = (
   if (req.user && (req.user.role === "owner" || req.user.role === "admin")) {
     next();
   } else {
-    res.status(403).json({ messageL: "Access denied, Restaurant owner role required" });
+    res.status(403).json({ message: "Access denied, Restaurant owner role required" });
   }
 };
