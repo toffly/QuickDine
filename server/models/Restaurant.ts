@@ -23,8 +23,6 @@ export interface IRestaurant extends Document {
   updatedAt: Date;
 }
 
-// ...existing code...
-
 const RestaurantSchema = new Schema<IRestaurant>(
   {
     name: { type: String, required: true, trim: true },
