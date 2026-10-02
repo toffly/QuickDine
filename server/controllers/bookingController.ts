@@ -59,6 +59,7 @@ export const createBooking = async (
       res.status(400).json({
         message: `Unable to reserve. Only ${availableSeats} seats are available for this time slot.`,
       });
+      return;
     }
 
     const booking = await Booking.create({
