@@ -81,7 +81,7 @@ export const createOwnerRestaurant = async (
     const slug = name
       .toLowerCase()
       .replace(/[^a-z0-9]+/g, "-")
-      .replace(/[^a-z0-9]+/g, "");
+      .replace(/^-+|-+$/g, "");
 
     const slugExists = await Restaurant.findOneAndDelete({ slug });
     if (slugExists) {
