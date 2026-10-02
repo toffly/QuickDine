@@ -83,7 +83,7 @@ export const createOwnerRestaurant = async (
       .replace(/[^a-z0-9]+/g, "-")
       .replace(/^-+|-+$/g, "");
 
-    const slugExists = await Restaurant.findOneAndDelete({ slug });
+    const slugExists = await Restaurant.findOne({ slug });
     if (slugExists) {
       res
         .status(400)
