@@ -38,6 +38,10 @@ export const createBooking = async (
 
     // Verify seat availability
     const requestedGuests = Number(guests);
+    if (!Number.isInteger(requestedGuests) || requestedGuests < 1) {
+      res.status(400).json({ message: "Guests must be a positive integer" });
+      return;
+    }
 
     const existingBookings = await Booking.find({
       restaurant: restaurantId,
