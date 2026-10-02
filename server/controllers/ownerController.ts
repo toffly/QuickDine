@@ -74,6 +74,7 @@ export const createOwnerRestaurant = async (
       !chef
     ) {
       res.status(400).json({ message: "Please provide all required fields" });
+      return;
     }
 
     // Generate slug from name
