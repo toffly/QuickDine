@@ -1,7 +1,6 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useAppContext } from "../context/AppContext";
-import { dummyAvailability, dummyRestaurant } from "../assets/assets";
 import Loader from "../components/Loader";
 import toast from "react-hot-toast";
 import Navbar from "../components/Navbar";
@@ -11,10 +10,11 @@ import RestaurantInfo from "../components/restaurant/RestaurantInfo";
 import RestaurantReviews from "../components/restaurant/RestaurantReviews";
 import BookingWidget from "../components/restaurant/BookingWidget";
 import Footer from "../components/Footer";
+import api from "../lib/api";
 
 const RestaurantDetail = () => {
   const { slug } = useParams<{ slug: string }>();
-  const { isAuthenticated, setIsAuthModalOpen } = useAppContext();
+  const { isAuthenticated, setAuthModalOpen } = useAppContext();
   const navigate = useNavigate();
 
   const [restaurant, setRestaurant] = useState<any>(null);
@@ -29,9 +29,22 @@ const RestaurantDetail = () => {
 
   useEffect(() => {
     const fetchRestaurant = async () => {
-      setRestaurant(dummyRestaurant.find((r) => r.slug === slug));
-      setLoading(false);
+      try {
+        setLoading(true);
+        const res = await api.get(`/restaurants/${slug}`);
+        setRestaurant(res.data);
+
+        // initialize booking values
+        const today = new Date().toISOString().split("T")[0];
+        setSelectedDate(today);
+      } catch (error: any) {
+        toast.error(error?.response?.data?.message || error?.message);
+        navigate("/");
+      } finally {
+        setLoading(false);
+      }
     };
+
     if (slug) {
       fetchRestaurant();
     }
@@ -39,8 +52,17 @@ const RestaurantDetail = () => {
 
   useEffect(() => {
     const fetchAvailable = async () => {
-      setSlotAvailable(dummyAvailability);
-      setLoadingSlot(false);
+      try {
+        setLoadingSlot(true);
+        const res = await api.get(
+          `/restaurants/${restaurant._id}/availability?date=${selectedDate}`,
+        );
+        setSlotAvailable(res.data);
+      } catch (error: any) {
+        console.error(error);
+      } finally {
+        setLoadingSlot(false)
+      }
     };
     fetchAvailable();
   }, [restaurant?._id, selectedDate]);
@@ -58,13 +80,13 @@ const RestaurantDetail = () => {
     }
 
     if (!isAuthenticated) {
-      setIsAuthModalOpen(true);
+      setAuthModalOpen(true);
       return;
     }
 
     //Redirect to Confirmation page with query params
     navigate(
-      `/booking/${restaurant.slug}?slot=${selectedSlot}&date=${selectedDate}&guests=${selectedGuests}`,
+      `/bookings/${restaurant.slug}?slot=${selectedSlot}&date=${selectedDate}&guests=${selectedGuests}`,
     );
   };
 
@@ -104,7 +126,7 @@ const RestaurantDetail = () => {
         </div>
       </main>
 
-      <Footer/>
+      <Footer />
     </div>
   );
 };

@@ -1,10 +1,10 @@
-import { useEffect, useState } from "react";
-import { useAppContext } from "../context/AppContext";
-import { Link, useLocation, useNavigate } from "react-router-dom";
-import { LayoutDashboard, LogOut, Menu, ShieldCheck, X } from "lucide-react";
+import { useState, useEffect } from "react";
+import { Link, useNavigate, useLocation } from "react-router-dom";
+import { useAppContext } from "../context/AppContext.tsx";
+import { Menu, X, LogOut, LayoutDashboard, ShieldCheck } from "lucide-react";
 
 const Navbar = () => {
-  const { user, logout, setIsAuthModalOpen } = useAppContext();
+  const { user, logout, setAuthModalOpen } = useAppContext();
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -22,17 +22,15 @@ const Navbar = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  // Close mobile menu and dropdowns when location changes
   useEffect(() => {
-    const onLocationChange = () => {
-      setMobileMenuOpen(false);
-      setDropdownOpen(false);
-    };
-    onLocationChange();
+    (() => setMobileMenuOpen(false))();
+    (() => setDropdownOpen(false))();
   }, [location]);
 
   const handleDashboardClick = () => {
     if (!user) {
-      setIsAuthModalOpen(true);
+      setAuthModalOpen(true);
     } else {
       navigate("/dashboard");
     }
@@ -45,7 +43,7 @@ const Navbar = () => {
       <div className="max-w-7xl mx-auto flex justify-between items-center h-full px-6 md:px-10">
         {/* Logo */}
         <div className="flex items-center gap-12">
-          <Link to={"/"}>
+          <Link to="/">
             <img
               src="/logo.svg"
               alt="Logo"
@@ -53,19 +51,19 @@ const Navbar = () => {
             />
           </Link>
 
-          {/* Desktop */}
+          {/* Desktop Navigation Links */}
           <div className="hidden md:flex gap-8 items-center">
             <Link
-              to={"/"}
+              to="/"
               className={`text-sm transition-colors pb-1 border-b-2 cursor-pointer ${location.pathname === "/" ? (scrolled ? "text-secondary border-secondary" : "text-white border-white") : "text-black/55 hover:text-primary border-transparent"}`}
             >
               Discover
             </Link>
             <Link
-              to={"/search"}
-              className={`text-sm transition-colors pb-1 border-b-2 border-transparent cursor-pointer ${location.pathname.startsWith("/search") ? "text-secondary border-secondary" : scrolled || location.pathname !== "/" ? "text-black/55 hover:text-primary" : "text-white/80 hover:text-white"}  `}
+              to="/search"
+              className={`text-sm transition-colors pb-1 border-b-2 border-transparent cursor-pointer ${location.pathname.startsWith("/search") ? "text-secondary border-secondary" : scrolled || location.pathname !== "/" ? "text-black/55 hover:text-primary" : "text-white/80 hover:text-white"}}`}
             >
-              Restaurant
+              Restaurants
             </Link>
             <button
               onClick={handleDashboardClick}
@@ -76,7 +74,7 @@ const Navbar = () => {
           </div>
         </div>
 
-        {/* Auth Action (Desktop) */}
+        {/* Auth Actions (Desktop) */}
         <div className="hidden md:flex items-center gap-6">
           {user ? (
             <div className="relative">
@@ -87,12 +85,14 @@ const Navbar = () => {
                 <span className="size-7 rounded-full bg-secondary/20 border flex items-center justify-center text-xs uppercase">
                   {user.name.charAt(0)}
                 </span>
-                <span className="max-w-30">{user.name.split(" ")[0]}</span>
+                <span className="max-w-[120px] truncate">
+                  {user.name.split(" ")[0]}
+                </span>
               </button>
 
               {/* Dropdown Menu */}
               {dropdownOpen && (
-                <div className="absolute right-0 mt-2 w-56 bg-white border border-outline-variant/30 ambient-shadow rounded-lg py-2 z-50 slide-in-top">
+                <div className="absolute right-0 mt-2 w-56 bg-white border border-outline-variant/30 ambient-shadow rounded-lg py-2 z-50 animate-in fade-in slide-in-from-top-2 duration-200">
                   <div className="px-4 py-2 border-b border-outline-variant/10">
                     <p className="text-sm text-primary truncate">{user.name}</p>
                     <p className="text-xs text-black/55 truncate">
@@ -101,7 +101,7 @@ const Navbar = () => {
                   </div>
                   <button
                     onClick={handleDashboardClick}
-                    className="w-full flex items-center gap-3 px-4 py-2.5 text-black/55 hover:text-primary hover:bg-surface transition-colors cursor-pointer text-left"
+                    className="w-full flex items-center gap-3 px-4 py-2.5 text-xs text-black/55 hover:text-primary hover:bg-surface transition-colors cursor-pointer text-left"
                   >
                     <LayoutDashboard size={14} />
                     My Bookings
@@ -139,14 +139,14 @@ const Navbar = () => {
           ) : (
             <>
               <button
-                onClick={() => setIsAuthModalOpen(true)}
+                onClick={() => setAuthModalOpen(true)}
                 className={`text-sm transition-colors cursor-pointer ${scrolled || location.pathname !== "/" ? "text-black/55 hover:text-primary" : "text-white/80 hover:text-white"}`}
               >
                 Sign In
               </button>
               <button
-                onClick={() => setIsAuthModalOpen(true)}
-                className={`text-sm font-medium tracking-wide uppdercase px-5 py-2.5 transition-soft cursor-pointer ${scrolled || location.pathname !== "/" ? "bg-primary text-white hover:bg-primary-container hover:text-secondary" : "bg-white text-primary hover:bg-secondary hover:text-white"}`}
+                onClick={() => setAuthModalOpen(true)}
+                className={`text-xs font-medium tracking-wider uppercase px-5 py-2.5 transition-soft cursor-pointer ${scrolled || location.pathname !== "/" ? "bg-primary text-white hover:bg-primary-container hover:text-secondary" : "bg-white text-primary hover:bg-secondary hover:text-white"}`}
               >
                 Sign Up
               </button>
@@ -168,18 +168,15 @@ const Navbar = () => {
 
       {/* Mobile Menu Drawer */}
       {mobileMenuOpen && (
-        <div className="md:hidden fixed inset-x-0 top-16 bg-white border-b border-outline-variant/20 py-6 px-6 z-50 ambient-shadow flex flex-col gap-5 slide-in-top">
-          <Link
-            to={"/"}
-            className="text-base text-on-surface hover:text-primary"
-          >
+        <div className="md:hidden fixed inset-x-0 top-16 bg-white border-b border-outline-variant/20 py-6 px-6 z-50 ambient-shadow flex flex-col gap-5 animate-in slide-in-from-top duration-300">
+          <Link to="/" className="text-base text-on-surface hover:text-primary">
             Discover
           </Link>
           <Link
-            to={"/search"}
+            to="/search"
             className="text-base text-on-surface hover:text-primary"
           >
-            Restaurant
+            Restaurants
           </Link>
           <button
             onClick={handleDashboardClick}
@@ -188,7 +185,7 @@ const Navbar = () => {
             Reservations
           </button>
 
-          <div className="border-t border-outline-variant/50 my-2" />
+          <div className="border-t border-outline-variant/10 my-2"></div>
 
           {user ? (
             <div className="flex flex-col gap-4">
@@ -201,9 +198,15 @@ const Navbar = () => {
                   <p className="text-xs text-black/55">{user.email}</p>
                 </div>
               </div>
+              <Link
+                to="/dashboard"
+                className="text-sm font-medium text-black/55 hover:text-primary"
+              >
+                My Bookings
+              </Link>
               {user.role === "admin" && (
                 <Link
-                  to={"/dashboard"}
+                  to="/admin/dashboard"
                   className="text-sm font-medium text-black/55 hover:text-primary"
                 >
                   Admin Console
@@ -211,7 +214,7 @@ const Navbar = () => {
               )}
               {user.role === "owner" && (
                 <Link
-                  to={"/owner/dashboard"}
+                  to="/owner/dashboard"
                   className="text-sm font-medium text-black/55 hover:text-primary"
                 >
                   Owner Console
@@ -227,13 +230,13 @@ const Navbar = () => {
           ) : (
             <div className="flex flex-col gap-3">
               <button
-                onClick={() => setIsAuthModalOpen(true)}
+                onClick={() => setAuthModalOpen(true)}
                 className="w-full border border-outline-variant/50 text-center py-3 text-sm font-medium hover:border-primary cursor-pointer"
               >
                 Sign In
               </button>
               <button
-                onClick={() => setIsAuthModalOpen(true)}
+                onClick={() => setAuthModalOpen(true)}
                 className="w-full bg-primary text-white text-center py-3 text-xs font-medium tracking-widest uppercase hover:bg-secondary cursor-pointer"
               >
                 Sign Up
@@ -245,5 +248,4 @@ const Navbar = () => {
     </nav>
   );
 };
-
 export default Navbar;

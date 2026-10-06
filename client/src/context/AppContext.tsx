@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
-import { dummyUser } from "../assets/assets";
+import api from "../lib/api";
+import toast from "react-hot-toast";
 
 interface UserType {
   _id: string;
@@ -15,7 +16,7 @@ interface AppContextType {
   loading: boolean;
   isAuthenticated: boolean;
   isAuthModalOpen: boolean;
-  setIsAuthModalOpen: (open: boolean) => void;
+  setAuthModalOpen: (open: boolean) => void;
   login: (email: string, password: string) => Promise<boolean>;
   register: (
     name: string,
@@ -39,14 +40,26 @@ export const AppContextProvider = ({ children }: Props) => {
     localStorage.getItem("token"),
   );
   const [loading, setLoading] = useState<boolean>(true);
-  const [isAuthModalOpen, setIsAuthModalOpen] = useState<boolean>(false);
+  const [isAuthModalOpen, setAuthModalOpen] = useState<boolean>(false);
 
   const login = async (email: string, password: string): Promise<boolean> => {
-    console.log(email, password);
-    setUser(dummyUser as any);
-    setToken(dummyUser.token);
-    localStorage.setItem("token", dummyUser.token);
-    return true;
+    try {
+      setLoading(true);
+      const res = await api.post("/auth/login", { email, password });
+      const { token: userToken, ...userData } = res.data;
+
+      localStorage.setItem("token", userToken);
+      setToken(userToken);
+      setUser(userData);
+
+      toast.success(`Welcome back, ${userData.name}`);
+      return true;
+    } catch (error: any) {
+      toast.error(error?.response?.data?.message || error?.message);
+      return false;
+    } finally {
+      setLoading(false);
+    }
   };
 
   const register = async (
@@ -56,11 +69,29 @@ export const AppContextProvider = ({ children }: Props) => {
     phone?: string,
     role?: string,
   ): Promise<boolean> => {
-    console.log(name, email, password, phone, role);
-    setUser(dummyUser as any);
-    setToken(dummyUser.token);
-    localStorage.setItem("token", dummyUser.token);
-    return true;
+    try {
+      setLoading(true);
+      const res = await api.post("/auth/register", {
+        name,
+        email,
+        password,
+        phone,
+        role,
+      });
+      const { token: userToken, ...userData } = res.data;
+
+      localStorage.setItem("token", userToken);
+      setToken(userToken);
+      setUser(userData);
+
+      toast.success(`Welcome to QuickDine!`);
+      return true;
+    } catch (error: any) {
+      toast.error(error?.response?.data?.message || error?.message);
+      return false;
+    } finally {
+      setLoading(false);
+    }
   };
 
   const logout = () => {
@@ -73,12 +104,18 @@ export const AppContextProvider = ({ children }: Props) => {
   useEffect(() => {
     const loaduser = async () => {
       if (token) {
-        setUser(dummyUser as any);
+        try {
+          const res = await api.get("/auth/me");
+          setUser(res.data);
+        } catch (error: any) {
+          toast.error(error?.response?.data?.message || error?.message);
+          logout();
+        }
       }
       setLoading(false);
     };
     loaduser();
-  }, []);
+  }, [token]);
 
   const value: AppContextType = {
     user,
@@ -86,7 +123,7 @@ export const AppContextProvider = ({ children }: Props) => {
     loading,
     isAuthenticated: !!user,
     isAuthModalOpen,
-    setIsAuthModalOpen,
+    setAuthModalOpen,
     login,
     register,
     logout,
@@ -95,9 +132,9 @@ export const AppContextProvider = ({ children }: Props) => {
 };
 
 export const useAppContext = () => {
-  const context = useContext(AppContext)
-  if(!context){
-    throw new Error("useAppContext must be used within AppContextProvider")
+  const context = useContext(AppContext);
+  if (!context) {
+    throw new Error("useAppContext must be used within AppContextProvider");
   }
-  return context
-}
+  return context;
+};

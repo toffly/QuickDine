@@ -1,17 +1,18 @@
-import { useState } from "react";
-import { useAppContext } from "../context/AppContext";
-import { Lock, Mail, Phone, User, X } from "lucide-react";
+import React, { useState } from "react";
+import { useAppContext } from "../context/AppContext.tsx";
+import { X, Mail, Lock, User, Phone } from "lucide-react";
 
 const AuthModal = () => {
-  const { isAuthModalOpen, setIsAuthModalOpen, login, register } =
+  const { isAuthModalOpen, setAuthModalOpen, login, register } =
     useAppContext();
   const [isLoginTab, setIsLoginTab] = useState<boolean>(true);
 
+  // Form states
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [phone, setPhone] = useState("");
-  const [isOwner, setIsOwner] = useState(false);
+  const [isOwner, setIsOwner] = useState<boolean>(false);
 
   const [formLoading, setFormLoading] = useState(false);
 
@@ -27,7 +28,7 @@ const AuthModal = () => {
 
   const handleClose = () => {
     resetForm();
-    setIsAuthModalOpen(false);
+    setAuthModalOpen(false);
   };
 
   const handleSubmit = async (e: React.SubmitEvent) => {
@@ -56,42 +57,41 @@ const AuthModal = () => {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-fade-in animate-duration-300">
-      <div className="absolute inset-0" onClick={handleClose} />
+      {/* Click outside to close */}
+      <div className="absolute inset-0" onClick={handleClose}></div>
 
       {/* Modal Container */}
-      <div className="relative w-full max-w-md bg-white border border-outline-variant/30 ambient-shadow">
+      <div className="relative w-full max-w-md bg-white border border-outline-variant/30 ambient-shadow rounded-lg overflow-hidden z-10 transition-all transform scale-100 flex flex-col">
         {/* Close Button */}
         <button
           onClick={handleClose}
           className="absolute top-4 right-4 text-black/55 hover:text-primary transition-colors cursor-pointer"
+          aria-label="Close"
         >
           <X size={20} />
         </button>
 
+        {/* Header Tabs */}
         <div className="flex border-b border-outline-variant/20">
           <button
             onClick={() => setIsLoginTab(true)}
-            className={`flex-1 py-5 text-center text-xs font-medium tracking-widest transition-all cursor-pointer
-                ${
-                  isLoginTab
-                    ? "text-primary border-b-2 border-primary bg-surface-container-lowest"
-                    : "text-black/55 hover:text-primary bg-surface-container-low/50"
-                }
-                `}
+            className={`flex-1 py-5 text-center text-xs font-medium tracking-widest transition-all cursor-pointer ${
+              isLoginTab
+                ? "text-primary border-b-2 border-primary bg-surface-container-lowest"
+                : "text-black/55 hover:text-primary bg-surface-container-low/50"
+            }`}
           >
-            Sign In
+            SIGN IN
           </button>
           <button
             onClick={() => setIsLoginTab(false)}
-            className={`flex-1 py-5 text-center text-xs font-medium tracking-widest transition-all cursor-pointer
-                ${
-                  isLoginTab
-                    ? "text-primary border-b-2 border-primary bg-surface-container-lowest"
-                    : "text-black/55 hover:text-primary bg-surface-container-low/50"
-                }
-                `}
+            className={`flex-1 py-5 text-center text-xs font-medium tracking-widest transition-all cursor-pointer ${
+              !isLoginTab
+                ? "text-primary border-b-2 border-primary bg-surface-container-lowest"
+                : "text-black/55 hover:text-primary bg-surface-container-low/50"
+            }`}
           >
-            Sign Up
+            SIGN UP
           </button>
         </div>
 
@@ -103,19 +103,19 @@ const AuthModal = () => {
           <div>
             <div className="text-center mb-8">
               <h2 className="font-display text-2xl font-medium text-primary tracking-tight">
-                Welcom to QuickDine
+                Welcome to QuickDine
               </h2>
               <p className="text-xs text-black/55 mt-2 leading-relaxed">
-                Access your exclusive reservations and curated dining profile
+                Access your exclusive reservations and curated dining profile.
               </p>
             </div>
 
             <div className="space-y-5">
-              {/* Name Field (Register) */}
-              {isLoginTab && (
+              {/* Name Field (Register Only) */}
+              {!isLoginTab && (
                 <div className="space-y-1">
                   <label className="block text-left text-[10px] font-medium text-black/55 tracking-wider uppercase">
-                    Full Name
+                    FULL NAME
                   </label>
                   <div className="relative">
                     <span className="absolute inset-y-0 left-0 flex items-center pr-3 pointer-events-none text-black/55">
@@ -126,8 +126,8 @@ const AuthModal = () => {
                       required={!isLoginTab}
                       value={name}
                       onChange={(e) => setName(e.target.value)}
-                      placeholder="Jane Doe"
-                      className="w-full pl-7 pb-2 pt-1 text-sm bg-transparent border-b border-outline-variant/60 focus:border-secondary focus:outlinenone transition-colors"
+                      placeholder="Sarah Jenkins"
+                      className="w-full pl-7 pb-2 pt-1 text-sm bg-transparent border-b border-outline-variant/60 focus:border-secondary focus:outline-none transition-colors"
                     />
                   </div>
                 </div>
@@ -136,7 +136,7 @@ const AuthModal = () => {
               {/* Email Field */}
               <div className="space-y-1">
                 <label className="block text-left text-[10px] font-medium text-black/55 tracking-wider uppercase">
-                  Email Address
+                  EMAIL ADDRESS
                 </label>
                 <div className="relative">
                   <span className="absolute inset-y-0 left-0 flex items-center pr-3 pointer-events-none text-black/55">
@@ -147,28 +147,28 @@ const AuthModal = () => {
                     required
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    placeholder="jane@example.com"
-                    className="w-full pl-7 pb-2 pt-1 text-sm bg-transparent border-b border-outline-variant/60 focus:border-secondary focus:outlinenone transition-colors"
+                    placeholder="you@example.com"
+                    className="w-full pl-7 pb-2 pt-1 text-sm bg-transparent border-b border-outline-variant/60 focus:border-secondary focus:outline-none transition-colors"
                   />
                 </div>
               </div>
 
-              {/* Phone Field (Register) */}
-              {isLoginTab && (
+              {/* Phone Field (Register Only) */}
+              {!isLoginTab && (
                 <div className="space-y-1">
                   <label className="block text-left text-[10px] font-medium text-black/55 tracking-wider uppercase">
-                    Phone Number (Optional)
+                    PHONE NUMBER (OPTIONAL)
                   </label>
                   <div className="relative">
                     <span className="absolute inset-y-0 left-0 flex items-center pr-3 pointer-events-none text-black/55">
                       <Phone size={16} />
                     </span>
                     <input
-                      type="text"
+                      type="tel"
                       value={phone}
                       onChange={(e) => setPhone(e.target.value)}
-                      placeholder="+1 (888) 888-8888"
-                      className="w-full pl-7 pb-2 pt-1 text-sm bg-transparent border-b border-outline-variant/60 focus:border-secondary focus:outlinenone transition-colors"
+                      placeholder="+1 (555) 000-0000"
+                      className="w-full pl-7 pb-2 pt-1 text-sm bg-transparent border-b border-outline-variant/60 focus:border-secondary focus:outline-none transition-colors"
                     />
                   </div>
                 </div>
@@ -177,7 +177,7 @@ const AuthModal = () => {
               {/* Password Field */}
               <div className="space-y-1">
                 <label className="block text-left text-[10px] font-medium text-black/55 tracking-wider uppercase">
-                  Password
+                  PASSWORD
                 </label>
                 <div className="relative">
                   <span className="absolute inset-y-0 left-0 flex items-center pr-3 pointer-events-none text-black/55">
@@ -185,16 +185,17 @@ const AuthModal = () => {
                   </span>
                   <input
                     type="password"
+                    required
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    placeholder="········"
-                    className="w-full pl-7 pb-2 pt-1 text-sm bg-transparent border-b border-outline-variant/60 focus:border-secondary focus:outlinenone transition-colors"
+                    placeholder="••••••••"
+                    className="w-full pl-7 pb-2 pt-1 text-sm bg-transparent border-b border-outline-variant/60 focus:border-secondary focus:outline-none transition-colors"
                   />
                 </div>
               </div>
 
-              {/* Owner Checkbox (Register) */}
-              {isLoginTab && (
+              {/* Owner Checkbox (Register Only) */}
+              {!isLoginTab && (
                 <div className="flex items-center gap-2.5 pt-2">
                   <input
                     type="checkbox"
@@ -213,23 +214,27 @@ const AuthModal = () => {
               )}
             </div>
           </div>
+
+          {/* Submit Buttons */}
           <div className="mt-8">
             <button
               type="submit"
               disabled={formLoading}
-              className="w-full bg-primary hover:bg-secondary text-white py-3.5 text-xs font-medium tracking-widest uppercase focus:outline-none transition-colors disabled:opacity-75 cursor-pointer"
+              className="w-full bg-primary hover:bg-secondary text-white py-3.5 px-4 text-xs font-medium tracking-widest uppercase focus:outline-none transition-colors disabled:opacity-75 cursor-pointer"
             >
               {formLoading
-                ? "Processing..."
+                ? "PROCESSING..."
                 : isLoginTab
-                  ? "Login"
-                  : "Create Account"}
+                  ? "LOGIN"
+                  : "CREATE ACCOUNT"}
             </button>
-            <p className="text-center text-[11px] text-black/55 mt-4 leading-relaxed">
+
+            <p className="text-center text-[11px] text-black/55/80 mt-4 leading-relaxed">
               By signing in, you agree to our{" "}
               <a href="#" className="underline hover:text-primary">
                 Terms of Service
               </a>
+              .
             </p>
           </div>
         </form>

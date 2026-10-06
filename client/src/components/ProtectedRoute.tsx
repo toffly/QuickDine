@@ -10,7 +10,7 @@ interface ProtectedRouteProps {
 }
 
 const ProtectedRoute = ({ children, allowedRoles }: ProtectedRouteProps) => {
-  const { isAuthenticated, user, loading, setIsAuthModalOpen } =
+  const { isAuthenticated, user, loading, setAuthModalOpen } =
     useAppContext();
 
   if (loading) {
@@ -32,7 +32,7 @@ const ProtectedRoute = ({ children, allowedRoles }: ProtectedRouteProps) => {
 
           <div className="flex flex-col gap-3 w-full">
             <button
-              onClick={() => setIsAuthModalOpen(true)}
+              onClick={() => setAuthModalOpen(true)}
               className="w-full bg-primary hover:bg-primary-container text-white py-3.5 px-4 text-xs font-medium tracking-widest uppercase hover:text-secondary focus:outline-none transition-none cursor-pointer"
             >
               Authenticate
