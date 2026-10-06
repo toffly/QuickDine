@@ -14,7 +14,7 @@ import Footer from "../components/Footer";
 
 const RestaurantDetail = () => {
   const { slug } = useParams<{ slug: string }>();
-  const { isAuthenticated, setIsAuthModalOpen } = useAppContext();
+  const { isAuthenticated, setAuthModalOpen } = useAppContext();
   const navigate = useNavigate();
 
   const [restaurant, setRestaurant] = useState<any>(null);
@@ -58,7 +58,7 @@ const RestaurantDetail = () => {
     }
 
     if (!isAuthenticated) {
-      setIsAuthModalOpen(true);
+      setAuthModalOpen(true);
       return;
     }
 
