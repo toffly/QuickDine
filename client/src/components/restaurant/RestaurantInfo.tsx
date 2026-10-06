@@ -1,5 +1,4 @@
 import { ChefHat, Clock, MapPin, Utensils } from "lucide-react";
-import React from "react";
 
 interface RestaurantInfoProps {
   restaurant: any;

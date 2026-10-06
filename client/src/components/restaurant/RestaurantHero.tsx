@@ -1,5 +1,4 @@
 import { Star } from "lucide-react";
-import React from "react";
 import { dummyRating, dummyReviewCount } from "../../assets/assets";
 
 interface RestaurantHeroProps {
