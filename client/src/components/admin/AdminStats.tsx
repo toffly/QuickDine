@@ -1,4 +1,4 @@
-import { Calendar, Icon, ShieldCheck, Users, Utensils } from "lucide-react";
+import { Calendar, ShieldCheck, Users, Utensils } from "lucide-react";
 
 interface AdminStatsProps {
   stats: any;

@@ -1,9 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { useAppContext } from "../context/AppContext";
-import {
-  dummyFeaturedRestaurants,
-  dummyMyBookingsData,
-} from "../assets/assets";
 import toast from "react-hot-toast";
 import Navbar from "../components/Navbar";
 import AuthModal from "../components/AuthModal";

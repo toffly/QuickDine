@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { dummyRestaurant } from "../../assets/assets";
 import toast from "react-hot-toast";
 import { Image, Upload, Utensils } from "lucide-react";
 import api from "../../lib/api";
@@ -341,4 +340,3 @@ const RestaurantWizard = ({ setRestaurant }: RestaurantWizardProps) => {
 };
 
 export default RestaurantWizard;
-
