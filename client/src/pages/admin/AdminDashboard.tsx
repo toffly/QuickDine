@@ -1,12 +1,13 @@
 import { useEffect, useState } from "react";
 import { useAppContext } from "../../context/AppContext";
-import { dummyAdminStats, dummyRestaurant } from "../../assets/assets";
 import Loader from "../../components/Loader";
 import Navbar from "../../components/Navbar";
 import { BarChart3Icon, CheckCircleIcon, ShieldCheckIcon } from "lucide-react";
 import AdminApprovals from "../../components/admin/AdminApprovals";
 import AdminStats from "../../components/admin/AdminStats";
 import Footer from "../../components/Footer";
+import api from "../../lib/api";
+import toast from "react-hot-toast";
 
 const AdminDashboard = () => {
   const { logout } = useAppContext();
@@ -19,17 +20,46 @@ const AdminDashboard = () => {
   const [btnLoading, setBtnLoading] = useState<string | null>(null);
 
   const fetchAdminData = async () => {
-    setRestaurants(dummyRestaurant);
-    setStats(dummyAdminStats);
-    setLoading(false);
+    try {
+      setLoading(true);
+      const res = await api.get("/admin/restaurants");
+      setRestaurants(res.data);
+
+      const sRes = await api.get("/admin/stats");
+      setStats(sRes.data);
+    } catch (error: any) {
+      toast.error(
+        error?.response?.data?.message ||
+          "Failed to retrieve administrator data",
+      );
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleApproveStatus = async (
     restaurantId: string,
     status: "approved" | "rejected",
   ) => {
-    console.log(restaurantId, status);
-    setBtnLoading(null);
+    try {
+      setBtnLoading(restaurantId);
+      await api.put(`/admin/restaurants/${restaurantId}/approve`, { status });
+      toast.success(`Restaurant has been marked as ${status.toUpperCase()}`);
+
+      // Reload local list and stats
+      const res = await api.get("/admin/restaurants");
+      setRestaurants(res.data);
+
+      const sRes = await api.get("/admin/stats");
+      setStats(sRes.data);
+    } catch (error: any) {
+      toast.error(
+        error?.response?.data?.message ||
+          "Failed to update restaurant approval status",
+      );
+    } finally {
+      setBtnLoading(null);
+    }
   };
 
   useEffect(() => {
@@ -113,11 +143,11 @@ const AdminDashboard = () => {
             )}
 
             {/* Tab 2: Analytic & Stats */}
-            {activeTab === "stats" && stats && <AdminStats stats={stats}/>}
+            {activeTab === "stats" && stats && <AdminStats stats={stats} />}
           </div>
         </div>
       </main>
-      <Footer/>
+      <Footer />
     </div>
   );
 };
