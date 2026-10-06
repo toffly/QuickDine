@@ -16,6 +16,7 @@ import {
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import RestaurantCard from "../components/RestaurantCard";
+import api from "../lib/api";
 
 const Dashboard = () => {
   const { user } = useAppContext();
@@ -27,8 +28,15 @@ const Dashboard = () => {
   // Fetch user Bookings
   useEffect(() => {
     const fetchBookings = async () => {
-      setBookings(dummyMyBookingsData);
-      setLoadingBookings(false);
+      try {
+        setLoadingBookings(true)
+        const res = await api.get("/bookings/my")
+        setBookings(res.data)
+      } catch (error:any) {
+        toast.error(error?.response?.data?.message || error?.message);        
+      } finally {
+        setLoadingBookings(false)
+      }
     };
 
     if (user) {
@@ -39,7 +47,12 @@ const Dashboard = () => {
   // Fetch Generic Recommendations
   useEffect(() => {
     const fetchRecommendations = async () => {
-      setRecommendations(dummyFeaturedRestaurants);
+      try {
+        const res = await api.get("/restaurants/featured")
+        setRecommendations(res.data)
+      } catch (error:any) {
+        toast.error(error?.response?.data?.message || error?.message);
+      }
     };
     fetchRecommendations();
   }, []);
