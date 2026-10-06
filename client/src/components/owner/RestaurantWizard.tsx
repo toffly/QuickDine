@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { dummyRestaurant } from "../../assets/assets";
 import toast from "react-hot-toast";
 import { Image, Upload, Utensils } from "lucide-react";
+import api from "../../lib/api";
 
 interface RestaurantWizardProps {
   setRestaurant: (restaurant: any) => void;
@@ -84,7 +85,13 @@ const RestaurantWizard = ({ setRestaurant }: RestaurantWizardProps) => {
         formData.append("image", imageFile);
       }
 
-      setRestaurant(dummyRestaurant[0]);
+      const res = await api.post("/owner/restaurant", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data"
+        }
+      })
+      setRestaurant(res.data)
+
       toast.success(
         "Restaurant profile submitted successfully! Awaiting Admin approval.",
       );
@@ -334,3 +341,4 @@ const RestaurantWizard = ({ setRestaurant }: RestaurantWizardProps) => {
 };
 
 export default RestaurantWizard;
+

@@ -29,13 +29,13 @@ const Dashboard = () => {
   useEffect(() => {
     const fetchBookings = async () => {
       try {
-        setLoadingBookings(true)
-        const res = await api.get("/bookings/my")
-        setBookings(res.data)
-      } catch (error:any) {
-        toast.error(error?.response?.data?.message || error?.message);        
+        setLoadingBookings(true);
+        const res = await api.get("/bookings/my");
+        setBookings(res.data);
+      } catch (error: any) {
+        toast.error(error?.response?.data?.message || error?.message);
       } finally {
-        setLoadingBookings(false)
+        setLoadingBookings(false);
       }
     };
 
@@ -48,9 +48,9 @@ const Dashboard = () => {
   useEffect(() => {
     const fetchRecommendations = async () => {
       try {
-        const res = await api.get("/restaurants/featured")
-        setRecommendations(res.data)
-      } catch (error:any) {
+        const res = await api.get("/restaurants/featured");
+        setRecommendations(res.data);
+      } catch (error: any) {
         toast.error(error?.response?.data?.message || error?.message);
       }
     };
@@ -63,11 +63,15 @@ const Dashboard = () => {
     }
 
     try {
+      await api.put(`/bookings/${bookingId}/cancel`);
+      // Update local state
       setBookings((prev) =>
         prev.map((b) =>
           b._id === bookingId ? { ...b, status: "cancelled" } : b,
         ),
       );
+
+      toast.success("Reservation cencelled successfully");
     } catch (error: any) {
       toast.error(error?.response?.data?.message || error?.message);
     }
